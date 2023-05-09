@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators'
 import { Country } from '../common/country';
-import { State } from 'src/app/common/state';
+import { State } from '../common/state';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +16,13 @@ export class EcommerceFormService {
   constructor(private httpClient: HttpClient) { }
 
   getCountries(): Observable<Country[]> {
+    
     return this.httpClient.get<GetResponseCountries>(this.countriesUrl).pipe(
       map(response => response._embedded.countries)
     );
   }
 
-  getStates(theCountryCode: number): Observable<State[]> {
+  getStates(theCountryCode: string): Observable<State[]> {
 
     // search url
     const searchStatesUrl = `${this.statesUrl}/search/findByCountryCode?code=${theCountryCode}`;
