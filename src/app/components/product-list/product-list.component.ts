@@ -7,9 +7,7 @@ import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-product-list',
-  templateUrl: './product-list-grid.component.html',
-  //templateUrl: './product-list-table.component.html',
-  //templateUrl: './product-list.component.html',
+  templateUrl: './product-list-grid.component.html',  
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
@@ -24,7 +22,7 @@ export class ProductListComponent implements OnInit {
   thePageSize: number = 5;
   theTotalElements: number = 0;
   
-  previousKeyword: string ="";
+  previousKeyword: string = null;
 
   constructor(private productService: ProductService,
               private cartService: CartService,
@@ -48,6 +46,7 @@ export class ProductListComponent implements OnInit {
   }
 
   handleSearchProducts() {
+
     const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
 
     //if we have a different keyword than previous
@@ -100,20 +99,21 @@ export class ProductListComponent implements OnInit {
                                                .subscribe(this.processResult());
   }
 
-  updatePageSize(pageSize: string) {
-    this.thePageSize = +pageSize;
-    this.thePageNumber = 1;
-    this.listProducts();
-  }
-
   processResult() {
-    return (data: any) => {
+    return (data) => {
       this.products = data._embedded.products;
       this.thePageNumber = data.page.number + 1;
       this.thePageSize = data.page.size;
       this.theTotalElements = data.page.totalElements;
     };
   }
+
+  updatePageSize(pageSize: string) {
+    this.thePageSize = +pageSize;
+    this.thePageNumber = 1;
+    this.listProducts();
+  }
+
 
   addToCart(theProduct: Product) {
     console.log(`Adding to cart: ${theProduct.name}, ${theProduct.unitPrice}`);
